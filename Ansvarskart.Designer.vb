@@ -95,7 +95,7 @@ Partial Class Ansvarskart
         'btnExportPNG
         '
         Me.btnExportPNG.Enabled = False
-        Me.btnExportPNG.Location = New System.Drawing.Point(317, 169)
+        Me.btnExportPNG.Location = New System.Drawing.Point(314, 158)
         Me.btnExportPNG.Name = "btnExportPNG"
         Me.btnExportPNG.Size = New System.Drawing.Size(255, 37)
         Me.btnExportPNG.TabIndex = 7
@@ -104,7 +104,7 @@ Partial Class Ansvarskart
         '
         'btnNotes
         '
-        Me.btnNotes.Location = New System.Drawing.Point(596, 112)
+        Me.btnNotes.Location = New System.Drawing.Point(314, 314)
         Me.btnNotes.Name = "btnNotes"
         Me.btnNotes.Size = New System.Drawing.Size(126, 40)
         Me.btnNotes.TabIndex = 8

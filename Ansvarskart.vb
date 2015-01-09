@@ -1,7 +1,10 @@
-﻿Public Class Ansvarskart
+﻿Imports Word = Microsoft.Office.Interop.Word
+Imports MindManager = Mindjet.MindManager.Interop
 
-    Public app As New Mindjet.MindManager.Interop.Application
-    Public currentDocument As Mindjet.MindManager.Interop.Document
+Public Class Ansvarskart
+
+    Public app As New MindManager.Application
+    Public currentDocument As MindManager.Document
     Public lstNames As New List(Of String)
     Const strMainFolder = "C:\Users\knjetl\Dropbox\Geodataseksjonen\PrPerson\"
 
@@ -20,25 +23,25 @@
 
     Sub PersonLoop(strProcess As String, Optional strName As String = "")
         currentDocument.Filter.RevealFilteredTopics()
-        Dim mainTopic As Mindjet.MindManager.Interop.Topic
+        Dim mainTopic As MindManager.Topic
         mainTopic = currentDocument.CentralTopic
         mainTopic.Filtered = False
 
         'Fagområde - skal alltid vises
-        Dim fagTopic As Mindjet.MindManager.Interop.Topic
+        Dim fagTopic As MindManager.Topic
         For Each fagTopic In mainTopic.AllSubTopics
             If InStr(fagTopic.Text, "Dataforvaltning") <> 0 Then
                 fagTopic.Filtered = False
                 'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
-                Dim duTopic As Mindjet.MindManager.Interop.Topic
+                Dim duTopic As MindManager.Topic
                 For Each duTopic In fagTopic.AllSubTopics
                     duTopic.Filtered = False
                     'Ansvarsområder/Prosjektgrupperinger skal alltid vises
-                    Dim ansvTopic As Mindjet.MindManager.Interop.Topic
+                    Dim ansvTopic As MindManager.Topic
                     For Each ansvTopic In duTopic.AllSubTopics
                         ansvTopic.Filtered = False
                         'Herfra og ned vises de elementene en person tilhører, med søsken på laveste nivå
-                        Dim taskTopic As Mindjet.MindManager.Interop.Topic
+                        Dim taskTopic As MindManager.Topic
                         For Each taskTopic In ansvTopic.AllSubTopics
                             Select Case strProcess
                                 Case "nameList"
@@ -59,11 +62,11 @@
         Next fagTopic
 
         'Eksporter bildefil
-        currentDocument.GraphicExport.ExportZoomed(strMainFolder & strName & ".png", Mindjet.MindManager.Interop.MmGraphicType.mmGraphicTypePng, 1)
+        currentDocument.GraphicExport.ExportZoomed(strMainFolder & strName & ".png", MindManager.MmGraphicType.mmGraphicTypePng, 1)
     End Sub
 
-    Sub nameList(tpc As Mindjet.MindManager.Interop.Topic)
-        Dim siblingTpc As Mindjet.MindManager.Interop.Topic
+    Sub nameList(tpc As MindManager.Topic)
+        Dim siblingTpc As MindManager.Topic
         siblingTpc = tpc
 
         If siblingTpc.AllSubTopics.Count = 0 Then
@@ -72,7 +75,7 @@
             If Not lstNames.Contains(strName) Then lstNames.Add(strName)
         End If
 
-        Dim subTpc As Mindjet.MindManager.Interop.Topic
+        Dim subTpc As MindManager.Topic
         For Each subTpc In siblingTpc.AllSubTopics
             nameList(subTpc)
         Next subTpc
@@ -80,9 +83,9 @@
 
     End Sub
 
-    Function recFilterLoop(tpc As Mindjet.MindManager.Interop.Topic, Str As String) As Boolean
+    Function recFilterLoop(tpc As MindManager.Topic, Str As String) As Boolean
         'recursive search and filter topics
-        Dim siblingTpc As Mindjet.MindManager.Interop.Topic
+        Dim siblingTpc As MindManager.Topic
         siblingTpc = tpc
 
         recFilterLoop = True
@@ -96,7 +99,7 @@
             End If
         End If
 
-        Dim subTpc As Mindjet.MindManager.Interop.Topic
+        Dim subTpc As MindManager.Topic
         For Each subTpc In siblingTpc.AllSubTopics
             subTpc.Filtered = recFilterLoop(subTpc, Str)
             If subTpc.Filtered = False Then
@@ -106,10 +109,10 @@
 
     End Function
 
-    Sub viewSiblings(tpc As Mindjet.MindManager.Interop.Topic)
+    Sub viewSiblings(tpc As MindManager.Topic)
         'recursive loop through topics, view last level siblings
 
-        Dim siblingTpc As Mindjet.MindManager.Interop.Topic
+        Dim siblingTpc As MindManager.Topic
         siblingTpc = tpc
 
         If siblingTpc.AllSubTopics.Count = 0 Then
@@ -117,7 +120,7 @@
             If siblingTpc.ParentTopic.Filtered = False Then siblingTpc.Filtered = False
         End If
 
-        Dim subTpc As Mindjet.MindManager.Interop.Topic
+        Dim subTpc As MindManager.Topic
         For Each subTpc In siblingTpc.AllSubTopics
             viewSiblings(subTpc)
         Next subTpc
@@ -175,21 +178,83 @@
     End Sub
 
     Private Sub btnNotes_Click(sender As Object, e As EventArgs) Handles btnNotes.Click
-        printNotes(currentDocument.CentralTopic)
+
+        Dim str As String
+        Dim oWord As Word.Application
+        Dim oDoc As Word.Document
+        Dim oPara As Word.Paragraph
+
+        'Start Word and open the document template.
+        oWord = CreateObject("Word.Application")
+        oWord.Visible = True
+        oDoc = oWord.Documents.Add
+
+        currentDocument.Filter.RevealFilteredTopics()
+        Dim mainTopic As MindManager.Topic
+        mainTopic = currentDocument.CentralTopic
+        mainTopic.Filtered = False
+
+        'Fagområde - skal alltid vises
+        Dim fagTopic As MindManager.Topic
+        For Each fagTopic In mainTopic.AllSubTopics
+            If InStr(fagTopic.Text, "Dataforvaltning") <> 0 Then
+                str = Replace(fagTopic.Text, vbLf, " - ")
+                oPara = oDoc.Content.Paragraphs.Add
+                oPara.Range.Text = str
+                oPara.Range.Style = "Tittel"
+                oPara.Range.InsertParagraphAfter()
+
+
+                'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
+                Dim duTopic As MindManager.Topic
+                For Each duTopic In fagTopic.AllSubTopics
+                    str = Replace(duTopic.Text, vbLf, " ")
+                    oPara = oDoc.Content.Paragraphs.Add
+                    oPara.Range.Text = str
+                    oPara.Range.Style = "Overskrift 1"
+                    oPara.Range.InsertParagraphAfter()
+                    'Ansvarsområder/Prosjektgrupperinger skal alltid vises
+                    Dim ansvTopic As MindManager.Topic
+                    For Each ansvTopic In duTopic.AllSubTopics
+                        printNotes(ansvTopic, oDoc, 2)
+                    Next ansvTopic
+                Next duTopic
+            Else
+                'fagTopic.Filtered = True
+            End If
+        Next fagTopic
+
     End Sub
 
-    Sub printNotes(tpc As Mindjet.MindManager.Interop.Topic)
-        Dim siblingTpc As Mindjet.MindManager.Interop.Topic
+    Sub printNotes(tpc As MindManager.Topic, doc As Word.Document, level As Integer)
+        Dim siblingTpc As MindManager.Topic
         siblingTpc = tpc
 
         'Finn en god datatype for notater
-        'Skriv notater til fil, med topic.text & ":" først 
+        'Skriv notater til fil, med topic.text & ":" først
+        Dim oPara As Word.Paragraph
+        If Not siblingTpc.Notes.IsEmpty Then
+            Dim str As String
+            str = Replace(siblingTpc.Text, vbLf, " - ")
+            oPara = doc.Content.Paragraphs.Add
+            oPara.Range.Text = str
+            oPara.Range.Style = "Overskrift " & level
+            oPara.Range.InsertParagraphAfter()
 
-        Dim subTpc As Mindjet.MindManager.Interop.Topic
+            oPara = doc.Content.Paragraphs.Add
+            oPara.Range.Text = siblingTpc.Notes.Text
+            'oPara.Range.Style = "Punktmerket liste"
+            oPara.Range.InsertParagraphAfter()
+            oPara.Format.Style = "Punktmerket liste"
+
+        End If
+
+        Dim subTpc As MindManager.Topic
         For Each subTpc In siblingTpc.AllSubTopics
-            printNotes(subTpc)
+            printNotes(subTpc, doc, level + 1)
         Next subTpc
 
-
     End Sub
+
+
 End Class
