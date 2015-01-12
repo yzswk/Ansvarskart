@@ -3,22 +3,24 @@ Imports MindManager = Mindjet.MindManager.Interop
 
 Public Class Ansvarskart
 
-    Public app As New MindManager.Application
+    Public app As MindManager.Application
     Public currentDocument As MindManager.Document
     Public lstNames As New List(Of String)
-    Const strMainFolder = "C:\Users\knjetl\Dropbox\Geodataseksjonen\PrPerson\"
+
 
 
     Sub initMM()
-        currentDocument = app.ActiveDocument
+        app = CreateObject("MindManager.Application")
+        Try
+            currentDocument = app.Documents.Open(My.Settings.strMMdoc, , False)
+        Catch ex As Exception
+            currentDocument = app.ActiveDocument
+        End Try
     End Sub
-
-
 
     Private Sub Ansvarskart_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         initMM()
         txtMMdoc.Text = currentDocument.FullName
-
     End Sub
 
     Sub PersonLoop(strProcess As String, Optional strName As String = "")
@@ -50,9 +52,7 @@ Public Class Ansvarskart
                                 Case "nameFilter"
                                     taskTopic.Filtered = recFilterLoop(taskTopic, strName)
                                     viewSiblings(taskTopic)
-
                             End Select
-
                         Next taskTopic
                     Next ansvTopic
                 Next duTopic
@@ -62,7 +62,7 @@ Public Class Ansvarskart
         Next fagTopic
 
         'Eksporter bildefil
-        currentDocument.GraphicExport.ExportZoomed(strMainFolder & strName & ".png", MindManager.MmGraphicType.mmGraphicTypePng, 1)
+        currentDocument.GraphicExport.ExportZoomed(My.Settings.strMainFolder & strName & ".png", MindManager.MmGraphicType.mmGraphicTypePng, 1)
     End Sub
 
     Sub nameList(tpc As MindManager.Topic)
