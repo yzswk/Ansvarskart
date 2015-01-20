@@ -23,6 +23,7 @@ Public Class Ansvarskart
         txtMMdoc.Text = currentDocument.FullName
     End Sub
 
+
     Sub PersonLoop(strProcess As String, Optional strName As String = "")
         currentDocument.Filter.RevealFilteredTopics()
         Dim mainTopic As MindManager.Topic
@@ -32,37 +33,35 @@ Public Class Ansvarskart
         'Fagområde - skal alltid vises
         Dim fagTopic As MindManager.Topic
         For Each fagTopic In mainTopic.AllSubTopics
-            If InStr(fagTopic.Text, "Dataforvaltning") <> 0 Then
-                fagTopic.Filtered = False
-                'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
-                Dim duTopic As MindManager.Topic
-                For Each duTopic In fagTopic.AllSubTopics
-                    duTopic.Filtered = False
-                    'Ansvarsområder/Prosjektgrupperinger skal alltid vises
-                    Dim ansvTopic As MindManager.Topic
-                    For Each ansvTopic In duTopic.AllSubTopics
-                        ansvTopic.Filtered = False
-                        'Herfra og ned vises de elementene en person tilhører, med søsken på laveste nivå
-                        Dim taskTopic As MindManager.Topic
-                        For Each taskTopic In ansvTopic.AllSubTopics
-                            Select Case strProcess
-                                Case "nameList"
-                                    'MsgBox(taskTopic.Text)
-                                    nameList(taskTopic)
-                                Case "nameFilter"
-                                    taskTopic.Filtered = recFilterLoop(taskTopic, strName)
-                                    viewSiblings(taskTopic)
-                            End Select
-                        Next taskTopic
-                    Next ansvTopic
-                Next duTopic
-            Else
-                fagTopic.Filtered = True
-            End If
+            fagTopic.Filtered = False
+            'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
+            Dim duTopic As MindManager.Topic
+            For Each duTopic In fagTopic.AllSubTopics
+                duTopic.Filtered = False
+                'Ansvarsområder/Prosjektgrupperinger skal alltid vises
+                Dim ansvTopic As MindManager.Topic
+                For Each ansvTopic In duTopic.AllSubTopics
+                    ansvTopic.Filtered = False
+                    'Herfra og ned vises de elementene en person tilhører, med søsken på laveste nivå
+                    Dim taskTopic As MindManager.Topic
+                    For Each taskTopic In ansvTopic.AllSubTopics
+                        Select Case strProcess
+                            Case "nameList"
+                                'MsgBox(taskTopic.Text)
+                                nameList(taskTopic)
+                            Case "nameFilter"
+                                taskTopic.Filtered = recFilterLoop(taskTopic, strName)
+                                viewSiblings(taskTopic)
+                        End Select
+                    Next taskTopic
+                Next ansvTopic
+            Next duTopic
         Next fagTopic
 
-        'Eksporter bildefil
-        currentDocument.GraphicExport.ExportZoomed(My.Settings.strMainFolder & strName & ".png", MindManager.MmGraphicType.mmGraphicTypePng, 1)
+        If strProcess = "nameFilter" Then
+            'Eksporter bildefil
+            currentDocument.GraphicExport.ExportZoomed(My.Settings.strMainFolder & strName & ".png", MindManager.MmGraphicType.mmGraphicTypePng, 1)
+        End If
     End Sub
 
     Sub nameList(tpc As MindManager.Topic)
@@ -189,39 +188,38 @@ Public Class Ansvarskart
         oWord.Visible = True
         oDoc = oWord.Documents.Add
 
+        oPara = oDoc.Content.Paragraphs.Add
+        oPara.Range.Text = "Arbeidsoppgaver Geodataseksjonen"
+        oPara.Range.Style = "Tittel"
+        oPara.Range.InsertParagraphAfter()
+
         currentDocument.Filter.RevealFilteredTopics()
         Dim mainTopic As MindManager.Topic
         mainTopic = currentDocument.CentralTopic
-        mainTopic.Filtered = False
 
         'Fagområde - skal alltid vises
         Dim fagTopic As MindManager.Topic
         For Each fagTopic In mainTopic.AllSubTopics
-            If InStr(fagTopic.Text, "Dataforvaltning") <> 0 Then
-                str = Replace(fagTopic.Text, vbLf, " - ")
+            str = Replace(fagTopic.Text, vbLf, " - ")
+            oPara = oDoc.Content.Paragraphs.Add
+            oPara.Range.Text = str
+            oPara.Range.Style = "Overskrift 1"
+            oPara.Range.InsertParagraphAfter()
+
+            'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
+            Dim duTopic As MindManager.Topic
+            For Each duTopic In fagTopic.AllSubTopics
+                str = Replace(duTopic.Text, vbLf, " ")
                 oPara = oDoc.Content.Paragraphs.Add
                 oPara.Range.Text = str
-                oPara.Range.Style = "Tittel"
+                oPara.Range.Style = "Overskrift 2"
                 oPara.Range.InsertParagraphAfter()
-
-
-                'Driftsoppgaver/Utviklingsoppgaver - skal alltid vises
-                Dim duTopic As MindManager.Topic
-                For Each duTopic In fagTopic.AllSubTopics
-                    str = Replace(duTopic.Text, vbLf, " ")
-                    oPara = oDoc.Content.Paragraphs.Add
-                    oPara.Range.Text = str
-                    oPara.Range.Style = "Overskrift 1"
-                    oPara.Range.InsertParagraphAfter()
-                    'Ansvarsområder/Prosjektgrupperinger skal alltid vises
-                    Dim ansvTopic As MindManager.Topic
-                    For Each ansvTopic In duTopic.AllSubTopics
-                        printNotes(ansvTopic, oDoc, 2)
-                    Next ansvTopic
-                Next duTopic
-            Else
-                'fagTopic.Filtered = True
-            End If
+                'Ansvarsområder/Prosjektgrupperinger skal alltid vises
+                Dim ansvTopic As MindManager.Topic
+                For Each ansvTopic In duTopic.AllSubTopics
+                    printNotes(ansvTopic, oDoc, 3)
+                Next ansvTopic
+            Next duTopic
         Next fagTopic
 
     End Sub
@@ -242,11 +240,9 @@ Public Class Ansvarskart
             oPara.Range.InsertParagraphAfter()
 
             oPara = doc.Content.Paragraphs.Add
+            oPara.Style = "Punktmerket liste"
             oPara.Range.Text = siblingTpc.Notes.Text
-            'oPara.Range.Style = "Punktmerket liste"
             oPara.Range.InsertParagraphAfter()
-            oPara.Format.Style = "Punktmerket liste"
-
         End If
 
         Dim subTpc As MindManager.Topic
