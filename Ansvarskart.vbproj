@@ -139,7 +139,7 @@
     </COMReference>
     <COMReference Include="MindManager">
       <Guid>{1E1D4AF9-6640-49C1-A33B-8CE8B47C9785}</Guid>
-      <VersionMajor>9</VersionMajor>
+      <VersionMajor>15</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
