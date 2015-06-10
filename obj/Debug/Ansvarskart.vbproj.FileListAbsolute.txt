@@ -9,3 +9,7 @@
 \\svv1p04auser01\knjetl$\documents\visual studio 2013\Projects\Ansvarskart\Ansvarskart\obj\Debug\Ansvarskart.xml
 \\svv1p04auser01\knjetl$\documents\visual studio 2013\Projects\Ansvarskart\Ansvarskart\obj\Debug\Ansvarskart.pdb
 \\Svv1p04auser01\knjetl$\documents\Visual Studio 2013\Projects\Ansvarskart\Ansvarskart\obj\Debug\Ansvarskart.Ansvarskart.resources
+\\svv1p04auser01\knjetl$\documents\Visual Studio 2013\Projects\Ansvarskart\Ansvarskart\bin\Debug\Ansvarskart.exe.manifest
+\\svv1p04auser01\knjetl$\documents\Visual Studio 2013\Projects\Ansvarskart\Ansvarskart\bin\Debug\Ansvarskart.application
+\\svv1p04auser01\knjetl$\documents\Visual Studio 2013\Projects\Ansvarskart\Ansvarskart\obj\Debug\Ansvarskart.exe.manifest
+\\svv1p04auser01\knjetl$\documents\Visual Studio 2013\Projects\Ansvarskart\Ansvarskart\obj\Debug\Ansvarskart.application
