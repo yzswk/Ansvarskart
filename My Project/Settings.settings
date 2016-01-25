@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="strMainFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\knjetl\Dropbox\Geodataseksjonen\PrPerson\</Value>
+      <Value Profile="(Default)">O:\1\Res\16080 Geodata\ADM for seksjonen\Årsplan\2015\Oppgaver pr person\</Value>
     </Setting>
     <Setting Name="strMMdoc" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\knjetl\Dropbox\Mindjet\20150123

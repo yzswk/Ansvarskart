@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Users\knjetl\Dropbox\Geodataseksjonen\PrPerson\")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("O:\1\Res\16080 Geodata\ADM for seksjonen\Årsplan\2015\Oppgaver pr person\")>  _
         Public Property strMainFolder() As String
             Get
                 Return CType(Me("strMainFolder"),String)

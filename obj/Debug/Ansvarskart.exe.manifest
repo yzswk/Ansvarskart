@@ -49,17 +49,17 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GyBBu3F6w7vJfgniDhTz3yGt5wQqcHJlqtlRlvZ0rLw=</dsig:DigestValue>
+        <dsig:DigestValue>15LliHOBB2LLVFB/VrBuMr3bp/v0ahbi8K/It82jjFk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Ansvarskart.exe.config" size="1151">
+  <file name="Ansvarskart.exe.config" size="1175">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>KrR65zct6+9oikVT/tWIMcAoGNNBE9dqU8GfNEnnayE=</dsig:DigestValue>
+      <dsig:DigestValue>yFMZX76xxKxvWn8p2mDAxBkd9znQrhuRsLlQXK54p10=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

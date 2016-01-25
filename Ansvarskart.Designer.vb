@@ -47,7 +47,7 @@ Partial Class Ansvarskart
         Me.txtMMdoc.Enabled = False
         Me.txtMMdoc.Location = New System.Drawing.Point(107, 13)
         Me.txtMMdoc.Name = "txtMMdoc"
-        Me.txtMMdoc.Size = New System.Drawing.Size(778, 22)
+        Me.txtMMdoc.Size = New System.Drawing.Size(831, 22)
         Me.txtMMdoc.TabIndex = 1
         '
         'lbNames
@@ -55,7 +55,7 @@ Partial Class Ansvarskart
         Me.lbNames.FormattingEnabled = True
         Me.lbNames.Location = New System.Drawing.Point(16, 65)
         Me.lbNames.Name = "lbNames"
-        Me.lbNames.Size = New System.Drawing.Size(228, 361)
+        Me.lbNames.Size = New System.Drawing.Size(277, 361)
         Me.lbNames.TabIndex = 2
         '
         'btnNameList
@@ -87,9 +87,9 @@ Partial Class Ansvarskart
         '
         'txtStatus
         '
-        Me.txtStatus.Location = New System.Drawing.Point(299, 403)
+        Me.txtStatus.Location = New System.Drawing.Point(314, 403)
         Me.txtStatus.Name = "txtStatus"
-        Me.txtStatus.Size = New System.Drawing.Size(639, 22)
+        Me.txtStatus.Size = New System.Drawing.Size(624, 22)
         Me.txtStatus.TabIndex = 6
         '
         'btnExportPNG
